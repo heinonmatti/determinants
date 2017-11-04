@@ -3,7 +3,18 @@ author: "Matti Heino"
 output_dir: "docs"  
 output:  
   html_document:  
-    self_contained: no  
-    theme: flatly  
+    self_contained: no
+    number_sections: no
+    toc: yes
+    toc_float: true
+    collapsed: false
+    code_folding: hide
+    theme: readable
+  pdf_document: default
 navbar:  
-  title: "My First Webpage" 
+  title: "Determining determinants"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "About"
+      href: about.html

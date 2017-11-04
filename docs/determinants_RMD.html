@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Matti Heino" />
+
+
+<title>Determining determinant importance</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 66px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+
+.section h2 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h3 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h4 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h5 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h6 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Determining determinants</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Determining determinant importance</h1>
+<h4 class="author"><em>Matti Heino</em></h4>
+
+</div>
+
+
+<div id="the-task" class="section level1">
+<h1>The task</h1>
+<p>Gjalt-Jorn Peters <a href="https://sciencer.eu/2017/10/why-estimations-of-determinant-relevance-should-not-be-based-on-regression-analysis/">gives us</a> the following example:</p>
+<p><em>[…] Image we’re developing an intervention to promote the use of hearing protection, specifically earplugs, in Dutch nightlife settings. Further, imagine that earplugs are generally quite uncomfortable; diminish the experience of the music somewhat; are easy to carry; and don’t hinder conversation. People who have experience with using earplugs are aware of this, but people who don’t use earplugs have their own ideas which may be sensible but are often not.</em></p>
+<p><em>An intervention developer does a determinant study and in the questionnaire measures the following two attitudinal beliefs:</em></p>
+<ul>
+<li><em>“When I use earplugs, I experience an uncomfortable feeling in my ears.”</em></li>
+<li><em>“When I use earplugs, my experience of the music is diminished.”</em></li>
+</ul>
+<p><em>And the following two self-efficacy beliefs:</em></p>
+<ul>
+<li><em>“Earplugs are easy to carry.”</em></li>
+<li><em>“Earplugs hinder conversation.” (reverse coded)</em></li>
+</ul>
+</div>
+<div id="the-simulation" class="section level1">
+<h1>The simulation</h1>
+<p>Let’s formalise this by simulating two samples of participants. The first has people who have experience with earplugs, i.e. “experts”: This is created by forcing a correlation of 0.8 between two attitude items and two self-efficacy items. In addition, all attitude items correlate 0.5 with the outcome, and all self-efficacy items correlate 0.7 with the outcome. Everything else is correlated on a 0.1 level.</p>
+<p>The other sample has no experts; it’s identical to the previous one except for the 0.8 correlations. We also combine these two samples into a third sample.</p>
+<pre class="r"><code># Create a correlation matrix for mvrnorm:
+
+experts &lt;- matrix(
+c(1, 0.8, 0.1, 0.1, 0.8, 0.8, 0.1, 0.1, 0.5, 
+0.8,   1, 0.1, 0.1, 0.8, 0.8, 0.1, 0.1, 0.5, 
+0.1, 0.1,   1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.5, 
+0.1, 0.1, 0.1,   1, 0.1, 0.1, 0.1, 0.1, 0.5, 
+0.8, 0.8, 0.1, 0.1,   1, 0.8, 0.1, 0.1, 0.7, 
+0.8, 0.8, 0.1, 0.1, 0.8,   1, 0.1, 0.1, 0.7, 
+0.1, 0.1, 0.1, 0.1, 0.1, 0.1,   1, 0.1, 0.7, 
+0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,   1, 0.7, 
+0.5, 0.5, 0.5, 0.5, 0.7, 0.7, 0.7, 0.7,   1), 
+nrow = 9, ncol = 9, byrow = TRUE)
+dimnames(experts) = list(
+c(&#39;A1uncomfy&#39;, &#39;A2poorMusic&#39;, &#39;A3&#39;, &#39;A4&#39;, &#39;SE1easiness&#39;, &#39;SE2conversation&#39;, &#39;SE3&#39;, &#39;SE4&#39;, &#39;outcome&#39;), 
+c(&#39;A1uncomfy&#39;, &#39;A2poorMusic&#39;, &#39;A3&#39;, &#39;A4&#39;, &#39;SE1easiness&#39;, &#39;SE2conversation&#39;, &#39;SE3&#39;, &#39;SE4&#39;, &#39;outcome&#39;))
+
+# Simulate the expert sample:
+expertsample &lt;- mvrnorm(10000, 
+                        c(1, 1, 0.5, 0.5, 1, 1, 0.5, 0.5, 0.5), 
+                        experts, tol = 1)
+
+noexperts &lt;- matrix(
+c(1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.5, 
+0.1,   1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.5, 
+0.1, 0.1,   1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.5, 
+0.1, 0.1, 0.1,   1, 0.1, 0.1, 0.1, 0.1, 0.5, 
+0.1, 0.1, 0.1, 0.1,   1, 0.1, 0.1, 0.1, 0.7, 
+0.1, 0.1, 0.1, 0.1, 0.1,   1, 0.1, 0.1, 0.7, 
+0.1, 0.1, 0.1, 0.1, 0.1, 0.1,   1, 0.1, 0.7, 
+0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,   1, 0.7, 
+0.5, 0.5, 0.5, 0.5, 0.7, 0.7, 0.7, 0.7,   1), 
+nrow = 9, ncol = 9, byrow = TRUE)
+dimnames(noexperts) &lt;- list(
+c(&#39;A1uncomfy&#39;, &#39;A2poorMusic&#39;, &#39;A3&#39;, &#39;A4&#39;, &#39;SE1easiness&#39;, &#39;SE2conversation&#39;, &#39;SE3&#39;, &#39;SE4&#39;, &#39;outcome&#39;), 
+c(&#39;A1uncomfy&#39;, &#39;A2poorMusic&#39;, &#39;A3&#39;, &#39;A4&#39;, &#39;SE1easiness&#39;, &#39;SE2conversation&#39;, &#39;SE3&#39;, &#39;SE4&#39;, &#39;outcome&#39;))
+
+# Simulate the non-expert sample:
+noexpertsample &lt;- mvrnorm(10000, rep(0.5, 9), noexperts, tol = 1)
+
+# Combine samples:
+fullsample &lt;- bind_rows(data.frame(expertsample), data.frame(noexpertsample))</code></pre>
+<p>We aggregate the individual items to produce aggreate sumscore scales.</p>
+<pre class="r"><code>scales &lt;- list(
+    attitude = c(&#39;A1uncomfy&#39;, &#39;A2poorMusic&#39;, &#39;A3&#39;, &#39;A4&#39;),
+    seff = c(&#39;SE1easiness&#39;, &#39;SE2conversation&#39;, &#39;SE3&#39;, &#39;SE4&#39;),
+    indattitude = c(&#39;A3&#39;, &#39;A4&#39;),
+    indseff = c(&#39;SE3&#39;, &#39;SE4&#39;)
+)
+
+fullsample &lt;- makeScales(data.frame(fullsample), scales) %&gt;% data.frame
+expertsample &lt;- makeScales(data.frame(expertsample), scales) %&gt;% data.frame
+noexpertsample &lt;- makeScales(data.frame(noexpertsample), scales) %&gt;% data.frame</code></pre>
+<p>Let’s see how we did.</p>
+<div id="correlations" class="section level2">
+<h2>Correlations</h2>
+<p>Here’s the correlation matrix for the sample that <strong>includes experts</strong>, as well as a scatterplot of attitude on the x-axis and self-efficacy on the y-axis:</p>
+<pre class="r"><code>expertsample %&gt;% dplyr::select(attitude, seff, outcome) %&gt;% cor() %&gt;% round(3)</code></pre>
+<pre><code>##          attitude  seff outcome
+## attitude    1.000 0.664   0.706
+## seff        0.664 1.000   0.907
+## outcome     0.706 0.907   1.000</code></pre>
+<pre class="r"><code>plot(expertsample$attitude, expertsample$seff, xlim = c(-3, 3))
+lines(x = c(-10, 10), y = c(-10, 10), col = &quot;red&quot;)</code></pre>
+<p><img src="determinants_RMD_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>This is for the sample that <strong>didn’t include experts</strong>:</p>
+<pre class="r"><code>noexpertsample %&gt;% dplyr::select(attitude, seff, outcome) %&gt;% cor() %&gt;% round(3)</code></pre>
+<pre><code>##          attitude  seff outcome
+## attitude    1.000 0.342   0.692
+## seff        0.342 1.000   0.915
+## outcome     0.692 0.915   1.000</code></pre>
+<pre class="r"><code>plot(noexpertsample$attitude, noexpertsample$seff, xlim = c(-3, 3))
+lines(x = c(-10, 10), y = c(-10, 10), col = &quot;red&quot;)</code></pre>
+<p><img src="determinants_RMD_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>And here’s the <strong>combined sample</strong>:</p>
+<pre class="r"><code>fullsample %&gt;% dplyr::select(attitude, seff, outcome) %&gt;% cor() %&gt;% round(3)</code></pre>
+<pre><code>##          attitude  seff outcome
+## attitude    1.000 0.536   0.683
+## seff        0.536 1.000   0.891
+## outcome     0.683 0.891   1.000</code></pre>
+<pre class="r"><code>plot(fullsample$attitude, fullsample$seff, xlim = c(-3, 3))
+lines(x = c(-10, 10), y = c(-10, 10), col = &quot;red&quot;)</code></pre>
+<p><img src="determinants_RMD_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="regressions" class="section level2">
+<h2>Regressions</h2>
+<p>Now, let’s see what regression analysis gives us. The coefficients are standardised for comparability.</p>
+<p>Here’s the expert sample:</p>
+<pre class="r"><code>m.expert &lt;- lm(scale(outcome) ~ scale(attitude) + scale(seff), data = expertsample) 
+m.expert$coefficients %&gt;% round(3)</code></pre>
+<pre><code>##     (Intercept) scale(attitude)     scale(seff) 
+##           0.000           0.187           0.783</code></pre>
+<p>And the sample with no experts:</p>
+<pre class="r"><code>m.noexpert &lt;- lm(scale(outcome) ~ scale(attitude) + scale(seff), data = noexpertsample) 
+m.noexpert$coefficients %&gt;% round(3)</code></pre>
+<pre><code>##     (Intercept) scale(attitude)     scale(seff) 
+##           0.000           0.430           0.768</code></pre>
+<p>… And finally, the full sample:</p>
+<pre class="r"><code>m.full &lt;- lm(scale(outcome) ~ scale(attitude) + scale(seff), data = fullsample)
+m.full$coefficients %&gt;% round(3)</code></pre>
+<pre><code>##     (Intercept) scale(attitude)     scale(seff) 
+##           0.000           0.287           0.737</code></pre>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>What have we learned? The importance of attitude you’d infer from regression analysis is lower than if you had merely looked at bivariate correlations. But both analyses agree you should be targeting self-efficacy, if you only had to choose one.</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

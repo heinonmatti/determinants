@@ -1,0 +1,102 @@
+---
+title: "Determinants"
+author: "Matti Heino"
+date: "30 October 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+.libPaths("C:/R/R-3.4.2/library")
+
+knitr::opts_chunk$set(echo = TRUE)
+
+if(!require(pacman)) install.packages(pacman)
+
+p_load(userfriendlyscience, tidyverse, MASS, lme4)
+
+```
+
+
+```{r try1}
+experts <- matrix(
+c(1, 0.8, 0.1, 0.1, 0.8, 0.8, 0.1, 0.1, 0.5, 
+0.8, 1, 0.1, 0.1, 0.8, 0.8, 0.1, 0.1, 0.5, 
+0.1, 0.1, 1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.5, 
+0.1, 0.1, 0.1, 1, 0.1, 0.1, 0.1, 0.1, 0.5, 
+0.8, 0.8, 0.1, 0.1, 1, 0.8, 0.1, 0.1, 0.7, 
+0.8, 0.8, 0.1, 0.1, 0.8, 1, 0.1, 0.1, 0.7, 
+0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 1, 0.1, 0.7, 
+0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 1, 0.7, 
+0.5, 0.5, 0.5, 0.5, 0.7, 0.7, 0.7, 0.7, 1), 
+nrow = 9, ncol = 9, byrow = TRUE)
+dimnames(experts) = list(
+c('A1uncomfy', 'A2poorMusic', 'A3', 'A4', 'SE1easiness', 'SE2conversation', 'SE3', 'SE4', 'outcome'), 
+c('A1uncomfy', 'A2poorMusic', 'A3', 'A4', 'SE1easiness', 'SE2conversation', 'SE3', 'SE4', 'outcome'))
+
+# Simulate the expert sample:
+expertsample <- mvrnorm(10000, 
+                        c(1, 1, 0.5, 0.5, 1, 1, 0.5, 0.5, 0.5), 
+                        experts, tol = 1)
+
+noexperts <- matrix(
+c(1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.5, 
+0.1, 1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.5, 
+0.1, 0.1, 1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.5, 
+0.1, 0.1, 0.1, 1, 0.1, 0.1, 0.1, 0.1, 0.5, 
+0.1, 0.1, 0.1, 0.1, 1, 0.1, 0.1, 0.1, 0.7, 
+0.1, 0.1, 0.1, 0.1, 0.1, 1, 0.1, 0.1, 0.7, 
+0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 1, 0.1, 0.7, 
+0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 1, 0.7, 
+0.5, 0.5, 0.5, 0.5, 0.7, 0.7, 0.7, 0.7, 1), 
+nrow = 9, ncol = 9, byrow = TRUE)
+dimnames(noexperts) <- list(
+c('A1uncomfy', 'A2poorMusic', 'A3', 'A4', 'SE1easiness', 'SE2conversation', 'SE3', 'SE4', 'outcome'), 
+c('A1uncomfy', 'A2poorMusic', 'A3', 'A4', 'SE1easiness', 'SE2conversation', 'SE3', 'SE4', 'outcome'))
+
+# Simulate the non-expert sample:
+noexpertsample <- mvrnorm(10000, rep(0.5, 9), noexperts, tol = 1)
+
+fullsample <- bind_rows(data.frame(expertsample), data.frame(noexpertsample))
+
+scales <- list(
+    attitude = c('A1uncomfy', 'A2poorMusic', 'A3', 'A4'),
+    seff = c('SE1easiness', 'SE2conversation', 'SE3', 'SE4'),
+    indattitude = c('A3', 'A4'),
+    indseff = c('SE3', 'SE4')
+)
+
+fullsample <- makeScales(data.frame(fullsample), scales) %>% data.frame
+expertsample <- makeScales(data.frame(expertsample), scales) %>% data.frame
+noexpertsample <- makeScales(data.frame(noexpertsample), scales) %>% data.frame
+
+```
+
+```{r}
+
+m.full <- lm(scale(outcome) ~ scale(attitude) + scale(seff), data = fullsample)
+m.expert <- lm(scale(outcome) ~ scale(attitude) + scale(seff), data = expertsample) 
+m.noexpert <- lm(scale(outcome) ~ scale(attitude) + scale(seff), data = noexpertsample) 
+
+```
+
+```{r}
+cat("\nThis is the combined sample\n\n")
+m.full$coefficients %>% round(3)
+fullsample %>% select(attitude, seff, outcome) %>% cor()
+# fullsample %>% dplyr::select(attitude, seff, indattitude, indseff, outcome) %>% 
+#     rMatrix(., x = names(.))
+
+
+cat("\nThis is the sample with no experts\n\n")
+m.noexpert$coefficients %>% round(3)
+noexpertsample %>% select(attitude, seff, outcome) %>% cor()
+
+
+
+cat("\nThis is the sample with experts\n\n")
+m.expert$coefficients %>% round(3)
+expertsample %>% select(attitude, seff, outcome) %>% cor()
+
+
+```
+
