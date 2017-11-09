@@ -20,7 +20,7 @@ p_load(userfriendlyscience, tidyverse, MASS, lme4)
 
 Gjalt-Jorn Peters [gives us](https://sciencer.eu/2017/10/why-estimations-of-determinant-relevance-should-not-be-based-on-regression-analysis/) the following example:
 
-*[...] Image we’re developing an intervention to promote the use of hearing protection, specifically earplugs, in Dutch nightlife settings. Further, imagine that earplugs are generally quite uncomfortable; diminish the experience of the music somewhat; are easy to carry; and don’t hinder conversation. People who have experience with using earplugs are aware of this, but people who don’t use earplugs have their own ideas which may be sensible but are often not.*
+*[...] Image we're developing an intervention to promote the use of hearing protection, specifically earplugs, in Dutch nightlife settings. Further, imagine that earplugs are generally quite uncomfortable; diminish the experience of the music somewhat; are easy to carry; and don't hinder conversation. People who have experience with using earplugs are aware of this, but people who don't use earplugs have their own ideas which may be sensible but are often not.*
  
 *An intervention developer does a determinant study and in the questionnaire measures the following two attitudinal beliefs:*
 

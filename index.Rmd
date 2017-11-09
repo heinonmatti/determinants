@@ -1,5 +1,7 @@
 ---
-title: "My Website Name"
+title: "Determinants"
 ---
 
-This site is testing github pages.
+A first test of GitHub Pages. A simulation of determinant importance can be found [here](determinants_RMD.html).
+
+See [mattiheino.com](www.mattiheino.com) for my more complete blog.

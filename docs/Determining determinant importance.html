@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="pandoc">
+
+
+<meta name="author" content="Matti Heino">
+
+
+<title>Determining determinant importance</title>
+
+<script src="Determining%20determinant%20importance_files/jquery.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="Determining%20determinant%20importance_files/readable.css" rel="stylesheet">
+<script src="Determining%20determinant%20importance_files/bootstrap.js"></script>
+<script src="Determining%20determinant%20importance_files/html5shiv.js"></script>
+<script src="Determining%20determinant%20importance_files/respond.js"></script>
+<script src="Determining%20determinant%20importance_files/jquery-ui.js"></script>
+<link href="Determining%20determinant%20importance_files/jquery.css" rel="stylesheet">
+<script src="Determining%20determinant%20importance_files/jquery_002.js"></script>
+<script src="Determining%20determinant%20importance_files/tabsets.js"></script>
+<script src="Determining%20determinant%20importance_files/codefolding.js"></script>
+<link href="Determining%20determinant%20importance_files/default.css" rel="stylesheet">
+<script src="Determining%20determinant%20importance_files/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+<script type="text/javascript" src="Determining%20determinant%20importance_files/MathJax.js"></script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1px; bottom: 2px; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+
+<body><div id="MathJax_Message" style="display: none;"></div>
+
+<style type="text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 66px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+
+.section h2 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h3 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h4 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h5 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h6 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+<ul id="tocify-header1" class="tocify-header list-group"><li class="tocify-item list-group-item active" data-unique="the_task">The task</li></ul><ul id="tocify-header2" class="tocify-header list-group"><li class="tocify-item list-group-item" data-unique="the_simulation">The simulation</li><ul class="tocify-subheader list-group" data-tag="2"><li class="tocify-item list-group-item" data-unique="correlations">Correlations</li><li class="tocify-item list-group-item" data-unique="regressions">Regressions</li><li class="tocify-item list-group-item" data-unique="conclusion">Conclusion</li></ul></ul></div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="file:///C:/Git%20projects/determinants/docs/index.html">Determining determinants</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="file:///C:/Git%20projects/determinants/docs/index.html">Home</a>
+</li>
+<li>
+  <a href="file:///C:/Git%20projects/determinants/docs/about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Determining determinant importance</h1>
+<h4 class="author"><em>Matti Heino</em></h4>
+
+</div>
+
+
+<div id="the-task" class="section level1">
+<div name="the_task" data-unique="the_task"></div><h1>The task</h1>
+<p>Gjalt-Jorn Peters <a href="https://sciencer.eu/2017/10/why-estimations-of-determinant-relevance-should-not-be-based-on-regression-analysis/">gives us</a> the following example:</p>
+<p><em>[…] Image we’re developing an intervention to promote the use of 
+hearing protection, specifically earplugs, in Dutch nightlife settings. 
+Further, imagine that earplugs are generally quite uncomfortable; 
+diminish the experience of the music somewhat; are easy to carry; and 
+don’t hinder conversation. People who have experience with using 
+earplugs are aware of this, but people who don’t use earplugs have their
+ own ideas which may be sensible but are often not.</em></p>
+<p><em>An intervention developer does a determinant study and in the questionnaire measures the following two attitudinal beliefs:</em></p>
+<ul>
+<li><em>“When I use earplugs, I experience an uncomfortable feeling in my ears.”</em></li>
+<li><em>“When I use earplugs, my experience of the music is diminished.”</em></li>
+</ul>
+<p><em>And the following two self-efficacy beliefs:</em></p>
+<ul>
+<li><em>“Earplugs are easy to carry.”</em></li>
+<li><em>“Earplugs hinder conversation.” (reverse coded)</em></li>
+</ul>
+</div>
+<div id="the-simulation" class="section level1">
+<div name="the_simulation" data-unique="the_simulation"></div><h1>The simulation</h1>
+<p>Let’s formalise this by simulating two samples of participants. The 
+first has people who have experience with earplugs, i.e. “experts”: This
+ is created by forcing a correlation of 0.8 between two attitude items 
+and two self-efficacy items. In addition, all attitude items correlate 
+0.5 with the outcome, and all self-efficacy items correlate 0.7 with the
+ outcome. Everything else is correlated on a 0.1 level.</p>
+<p>The other sample has no experts; it’s identical to the previous one 
+except for the 0.8 correlations. We also combine these two samples into a
+ third sample.</p>
+<div class="row"><div class="col-md-12"><button type="button" class="btn btn-default btn-xs code-folding-btn pull-right" data-toggle="collapse" data-target="#rcode-643E0F361" aria-expanded="false" aria-controls="rcode-643E0F361"><span>Code</span></button></div></div><div class="collapse r-code-collapse" id="rcode-643E0F361"><pre class="r"><code class="r"><span class="comment"># Create a correlation matrix for mvrnorm:</span>
+
+<span class="identifier">experts</span> <span class="operator">&lt;-</span> <span class="identifier">matrix</span><span class="paren">(</span>
+<span class="identifier">c</span><span class="paren">(</span><span class="number">1</span>, <span class="number">0.8</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.8</span>, <span class="number">0.8</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.5</span>, 
+<span class="number">0.8</span>,   <span class="number">1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.8</span>, <span class="number">0.8</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.5</span>, 
+<span class="number">0.1</span>, <span class="number">0.1</span>,   <span class="number">1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.5</span>, 
+<span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>,   <span class="number">1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.5</span>, 
+<span class="number">0.8</span>, <span class="number">0.8</span>, <span class="number">0.1</span>, <span class="number">0.1</span>,   <span class="number">1</span>, <span class="number">0.8</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.7</span>, 
+<span class="number">0.8</span>, <span class="number">0.8</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.8</span>,   <span class="number">1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.7</span>, 
+<span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>,   <span class="number">1</span>, <span class="number">0.1</span>, <span class="number">0.7</span>, 
+<span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>,   <span class="number">1</span>, <span class="number">0.7</span>, 
+<span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">0.7</span>, <span class="number">0.7</span>, <span class="number">0.7</span>, <span class="number">0.7</span>,   <span class="number">1</span><span class="paren">)</span>, 
+<span class="identifier">nrow</span> <span class="operator">=</span> <span class="number">9</span>, <span class="identifier">ncol</span> <span class="operator">=</span> <span class="number">9</span>, <span class="identifier">byrow</span> <span class="operator">=</span> <span class="literal">TRUE</span><span class="paren">)</span>
+<span class="identifier">dimnames</span><span class="paren">(</span><span class="identifier">experts</span><span class="paren">)</span> <span class="operator">=</span> <span class="identifier">list</span><span class="paren">(</span>
+<span class="identifier">c</span><span class="paren">(</span><span class="string">'A1uncomfy'</span>, <span class="string">'A2poorMusic'</span>, <span class="string">'A3'</span>, <span class="string">'A4'</span>, <span class="string">'SE1easiness'</span>, <span class="string">'SE2conversation'</span>, <span class="string">'SE3'</span>, <span class="string">'SE4'</span>, <span class="string">'outcome'</span><span class="paren">)</span>, 
+<span class="identifier">c</span><span class="paren">(</span><span class="string">'A1uncomfy'</span>, <span class="string">'A2poorMusic'</span>, <span class="string">'A3'</span>, <span class="string">'A4'</span>, <span class="string">'SE1easiness'</span>, <span class="string">'SE2conversation'</span>, <span class="string">'SE3'</span>, <span class="string">'SE4'</span>, <span class="string">'outcome'</span><span class="paren">)</span><span class="paren">)</span>
+
+<span class="comment"># Simulate the expert sample:</span>
+<span class="identifier">expertsample</span> <span class="operator">&lt;-</span> <span class="identifier">mvrnorm</span><span class="paren">(</span><span class="number">10000</span>, 
+                        <span class="identifier">c</span><span class="paren">(</span><span class="number">1</span>, <span class="number">1</span>, <span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">0.5</span><span class="paren">)</span>, 
+                        <span class="identifier">experts</span>, <span class="identifier">tol</span> <span class="operator">=</span> <span class="number">1</span><span class="paren">)</span>
+
+<span class="identifier">noexperts</span> <span class="operator">&lt;-</span> <span class="identifier">matrix</span><span class="paren">(</span>
+<span class="identifier">c</span><span class="paren">(</span><span class="number">1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.5</span>, 
+<span class="number">0.1</span>,   <span class="number">1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.5</span>, 
+<span class="number">0.1</span>, <span class="number">0.1</span>,   <span class="number">1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.5</span>, 
+<span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>,   <span class="number">1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.5</span>, 
+<span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>,   <span class="number">1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.7</span>, 
+<span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>,   <span class="number">1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.7</span>, 
+<span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>,   <span class="number">1</span>, <span class="number">0.1</span>, <span class="number">0.7</span>, 
+<span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>,   <span class="number">1</span>, <span class="number">0.7</span>, 
+<span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">0.7</span>, <span class="number">0.7</span>, <span class="number">0.7</span>, <span class="number">0.7</span>,   <span class="number">1</span><span class="paren">)</span>, 
+<span class="identifier">nrow</span> <span class="operator">=</span> <span class="number">9</span>, <span class="identifier">ncol</span> <span class="operator">=</span> <span class="number">9</span>, <span class="identifier">byrow</span> <span class="operator">=</span> <span class="literal">TRUE</span><span class="paren">)</span>
+<span class="identifier">dimnames</span><span class="paren">(</span><span class="identifier">noexperts</span><span class="paren">)</span> <span class="operator">&lt;-</span> <span class="identifier">list</span><span class="paren">(</span>
+<span class="identifier">c</span><span class="paren">(</span><span class="string">'A1uncomfy'</span>, <span class="string">'A2poorMusic'</span>, <span class="string">'A3'</span>, <span class="string">'A4'</span>, <span class="string">'SE1easiness'</span>, <span class="string">'SE2conversation'</span>, <span class="string">'SE3'</span>, <span class="string">'SE4'</span>, <span class="string">'outcome'</span><span class="paren">)</span>, 
+<span class="identifier">c</span><span class="paren">(</span><span class="string">'A1uncomfy'</span>, <span class="string">'A2poorMusic'</span>, <span class="string">'A3'</span>, <span class="string">'A4'</span>, <span class="string">'SE1easiness'</span>, <span class="string">'SE2conversation'</span>, <span class="string">'SE3'</span>, <span class="string">'SE4'</span>, <span class="string">'outcome'</span><span class="paren">)</span><span class="paren">)</span>
+
+<span class="comment"># Simulate the non-expert sample:</span>
+<span class="identifier">noexpertsample</span> <span class="operator">&lt;-</span> <span class="identifier">mvrnorm</span><span class="paren">(</span><span class="number">10000</span>, <span class="identifier">rep</span><span class="paren">(</span><span class="number">0.5</span>, <span class="number">9</span><span class="paren">)</span>, <span class="identifier">noexperts</span>, <span class="identifier">tol</span> <span class="operator">=</span> <span class="number">1</span><span class="paren">)</span>
+
+<span class="comment"># Combine samples:</span>
+<span class="identifier">fullsample</span> <span class="operator">&lt;-</span> <span class="identifier">bind_rows</span><span class="paren">(</span><span class="identifier">data.frame</span><span class="paren">(</span><span class="identifier">expertsample</span><span class="paren">)</span>, <span class="identifier">data.frame</span><span class="paren">(</span><span class="identifier">noexpertsample</span><span class="paren">)</span><span class="paren">)</span></code></pre></div>
+<p>We aggregate the individual items to produce aggreate sumscore scales.</p>
+<div class="row"><div class="col-md-12"><button type="button" class="btn btn-default btn-xs code-folding-btn pull-right" data-toggle="collapse" data-target="#rcode-643E0F362" aria-expanded="false" aria-controls="rcode-643E0F362"><span>Code</span></button></div></div><div class="collapse r-code-collapse" id="rcode-643E0F362"><pre class="r"><code class="r"><span class="identifier">scales</span> <span class="operator">&lt;-</span> <span class="identifier">list</span><span class="paren">(</span>
+    <span class="identifier">attitude</span> <span class="operator">=</span> <span class="identifier">c</span><span class="paren">(</span><span class="string">'A1uncomfy'</span>, <span class="string">'A2poorMusic'</span>, <span class="string">'A3'</span>, <span class="string">'A4'</span><span class="paren">)</span>,
+    <span class="identifier">seff</span> <span class="operator">=</span> <span class="identifier">c</span><span class="paren">(</span><span class="string">'SE1easiness'</span>, <span class="string">'SE2conversation'</span>, <span class="string">'SE3'</span>, <span class="string">'SE4'</span><span class="paren">)</span>,
+    <span class="identifier">indattitude</span> <span class="operator">=</span> <span class="identifier">c</span><span class="paren">(</span><span class="string">'A3'</span>, <span class="string">'A4'</span><span class="paren">)</span>,
+    <span class="identifier">indseff</span> <span class="operator">=</span> <span class="identifier">c</span><span class="paren">(</span><span class="string">'SE3'</span>, <span class="string">'SE4'</span><span class="paren">)</span>
+<span class="paren">)</span>
+
+<span class="identifier">fullsample</span> <span class="operator">&lt;-</span> <span class="identifier">makeScales</span><span class="paren">(</span><span class="identifier">data.frame</span><span class="paren">(</span><span class="identifier">fullsample</span><span class="paren">)</span>, <span class="identifier">scales</span><span class="paren">)</span> <span class="operator">%&gt;%</span> <span class="identifier">data.frame</span>
+<span class="identifier">expertsample</span> <span class="operator">&lt;-</span> <span class="identifier">makeScales</span><span class="paren">(</span><span class="identifier">data.frame</span><span class="paren">(</span><span class="identifier">expertsample</span><span class="paren">)</span>, <span class="identifier">scales</span><span class="paren">)</span> <span class="operator">%&gt;%</span> <span class="identifier">data.frame</span>
+<span class="identifier">noexpertsample</span> <span class="operator">&lt;-</span> <span class="identifier">makeScales</span><span class="paren">(</span><span class="identifier">data.frame</span><span class="paren">(</span><span class="identifier">noexpertsample</span><span class="paren">)</span>, <span class="identifier">scales</span><span class="paren">)</span> <span class="operator">%&gt;%</span> <span class="identifier">data.frame</span></code></pre></div>
+<p>Let’s see how we did.</p>
+<div id="correlations" class="section level2">
+<div name="correlations" data-unique="correlations"></div><h2>Correlations</h2>
+<p>Here’s the correlation matrix for the sample that <strong>includes experts</strong>, as well as a scatterplot of attitude on the x-axis and self-efficacy on the y-axis:</p>
+<div class="row"><div class="col-md-12"><button type="button" class="btn btn-default btn-xs code-folding-btn pull-right" data-toggle="collapse" data-target="#rcode-643E0F363" aria-expanded="false" aria-controls="rcode-643E0F363"><span>Code</span></button></div></div><div class="collapse r-code-collapse" id="rcode-643E0F363"><pre class="r"><code class="r"><span class="identifier">expertsample</span> <span class="operator">%&gt;%</span> <span class="identifier">dplyr</span><span class="operator">:</span><span class="operator">:</span><span class="identifier">select</span><span class="paren">(</span><span class="identifier">attitude</span>, <span class="identifier">seff</span>, <span class="identifier">outcome</span><span class="paren">)</span> <span class="operator">%&gt;%</span> <span class="identifier">cor</span><span class="paren">(</span><span class="paren">)</span> <span class="operator">%&gt;%</span> <span class="identifier">round</span><span class="paren">(</span><span class="number">3</span><span class="paren">)</span></code></pre></div>
+<pre><code>##          attitude  seff outcome
+## attitude    1.000 0.656   0.704
+## seff        0.656 1.000   0.906
+## outcome     0.704 0.906   1.000</code></pre>
+<div class="row"><div class="col-md-12"><button type="button" class="btn btn-default btn-xs code-folding-btn pull-right" data-toggle="collapse" data-target="#rcode-643E0F364" aria-expanded="false" aria-controls="rcode-643E0F364"><span>Code</span></button></div></div><div class="collapse r-code-collapse" id="rcode-643E0F364"><pre class="r"><code class="r"><span class="identifier">plot</span><span class="paren">(</span><span class="identifier">expertsample</span><span class="operator">$</span><span class="identifier">attitude</span>, <span class="identifier">expertsample</span><span class="operator">$</span><span class="identifier">seff</span>, <span class="identifier">xlim</span> <span class="operator">=</span> <span class="identifier">c</span><span class="paren">(</span><span class="operator">-</span><span class="number">3</span>, <span class="number">3</span><span class="paren">)</span><span class="paren">)</span>
+<span class="identifier">lines</span><span class="paren">(</span><span class="identifier">x</span> <span class="operator">=</span> <span class="identifier">c</span><span class="paren">(</span><span class="operator">-</span><span class="number">10</span>, <span class="number">10</span><span class="paren">)</span>, <span class="identifier">y</span> <span class="operator">=</span> <span class="identifier">c</span><span class="paren">(</span><span class="operator">-</span><span class="number">10</span>, <span class="number">10</span><span class="paren">)</span>, <span class="identifier">col</span> <span class="operator">=</span> <span class="string">"red"</span><span class="paren">)</span></code></pre></div>
+<p><img src="Determining%20determinant%20importance_files/unnamed-chunk-1-1.png" width="672"></p>
+<p>This is for the sample that <strong>didn’t include experts</strong>:</p>
+<div class="row"><div class="col-md-12"><button type="button" class="btn btn-default btn-xs code-folding-btn pull-right" data-toggle="collapse" data-target="#rcode-643E0F365" aria-expanded="false" aria-controls="rcode-643E0F365"><span>Code</span></button></div></div><div class="collapse r-code-collapse" id="rcode-643E0F365"><pre class="r"><code class="r"><span class="identifier">noexpertsample</span> <span class="operator">%&gt;%</span> <span class="identifier">dplyr</span><span class="operator">:</span><span class="operator">:</span><span class="identifier">select</span><span class="paren">(</span><span class="identifier">attitude</span>, <span class="identifier">seff</span>, <span class="identifier">outcome</span><span class="paren">)</span> <span class="operator">%&gt;%</span> <span class="identifier">cor</span><span class="paren">(</span><span class="paren">)</span> <span class="operator">%&gt;%</span> <span class="identifier">round</span><span class="paren">(</span><span class="number">3</span><span class="paren">)</span></code></pre></div>
+<pre><code>##          attitude  seff outcome
+## attitude    1.000 0.343   0.689
+## seff        0.343 1.000   0.917
+## outcome     0.689 0.917   1.000</code></pre>
+<div class="row"><div class="col-md-12"><button type="button" class="btn btn-default btn-xs code-folding-btn pull-right" data-toggle="collapse" data-target="#rcode-643E0F366" aria-expanded="false" aria-controls="rcode-643E0F366"><span>Code</span></button></div></div><div class="collapse r-code-collapse" id="rcode-643E0F366"><pre class="r"><code class="r"><span class="identifier">plot</span><span class="paren">(</span><span class="identifier">noexpertsample</span><span class="operator">$</span><span class="identifier">attitude</span>, <span class="identifier">noexpertsample</span><span class="operator">$</span><span class="identifier">seff</span>, <span class="identifier">xlim</span> <span class="operator">=</span> <span class="identifier">c</span><span class="paren">(</span><span class="operator">-</span><span class="number">3</span>, <span class="number">3</span><span class="paren">)</span><span class="paren">)</span>
+<span class="identifier">lines</span><span class="paren">(</span><span class="identifier">x</span> <span class="operator">=</span> <span class="identifier">c</span><span class="paren">(</span><span class="operator">-</span><span class="number">10</span>, <span class="number">10</span><span class="paren">)</span>, <span class="identifier">y</span> <span class="operator">=</span> <span class="identifier">c</span><span class="paren">(</span><span class="operator">-</span><span class="number">10</span>, <span class="number">10</span><span class="paren">)</span>, <span class="identifier">col</span> <span class="operator">=</span> <span class="string">"red"</span><span class="paren">)</span></code></pre></div>
+<p><img src="Determining%20determinant%20importance_files/unnamed-chunk-2-1.png" width="672"></p>
+<p>And here’s the <strong>combined sample</strong>:</p>
+<div class="row"><div class="col-md-12"><button type="button" class="btn btn-default btn-xs code-folding-btn pull-right" data-toggle="collapse" data-target="#rcode-643E0F367" aria-expanded="false" aria-controls="rcode-643E0F367"><span>Code</span></button></div></div><div class="collapse r-code-collapse" id="rcode-643E0F367"><pre class="r"><code class="r"><span class="identifier">fullsample</span> <span class="operator">%&gt;%</span> <span class="identifier">dplyr</span><span class="operator">:</span><span class="operator">:</span><span class="identifier">select</span><span class="paren">(</span><span class="identifier">attitude</span>, <span class="identifier">seff</span>, <span class="identifier">outcome</span><span class="paren">)</span> <span class="operator">%&gt;%</span> <span class="identifier">cor</span><span class="paren">(</span><span class="paren">)</span> <span class="operator">%&gt;%</span> <span class="identifier">round</span><span class="paren">(</span><span class="number">3</span><span class="paren">)</span></code></pre></div>
+<pre><code>##          attitude  seff outcome
+## attitude    1.000 0.532   0.679
+## seff        0.532 1.000   0.891
+## outcome     0.679 0.891   1.000</code></pre>
+<div class="row"><div class="col-md-12"><button type="button" class="btn btn-default btn-xs code-folding-btn pull-right" data-toggle="collapse" data-target="#rcode-643E0F368" aria-expanded="false" aria-controls="rcode-643E0F368"><span>Code</span></button></div></div><div class="collapse r-code-collapse" id="rcode-643E0F368"><pre class="r"><code class="r"><span class="identifier">plot</span><span class="paren">(</span><span class="identifier">fullsample</span><span class="operator">$</span><span class="identifier">attitude</span>, <span class="identifier">fullsample</span><span class="operator">$</span><span class="identifier">seff</span>, <span class="identifier">xlim</span> <span class="operator">=</span> <span class="identifier">c</span><span class="paren">(</span><span class="operator">-</span><span class="number">3</span>, <span class="number">3</span><span class="paren">)</span><span class="paren">)</span>
+<span class="identifier">lines</span><span class="paren">(</span><span class="identifier">x</span> <span class="operator">=</span> <span class="identifier">c</span><span class="paren">(</span><span class="operator">-</span><span class="number">10</span>, <span class="number">10</span><span class="paren">)</span>, <span class="identifier">y</span> <span class="operator">=</span> <span class="identifier">c</span><span class="paren">(</span><span class="operator">-</span><span class="number">10</span>, <span class="number">10</span><span class="paren">)</span>, <span class="identifier">col</span> <span class="operator">=</span> <span class="string">"red"</span><span class="paren">)</span></code></pre></div>
+<p><img src="Determining%20determinant%20importance_files/unnamed-chunk-3-1.png" width="672"></p>
+</div>
+<div id="regressions" class="section level2">
+<div name="regressions" data-unique="regressions"></div><h2>Regressions</h2>
+<p>Now, let’s see what regression analysis gives us. The coefficients are standardised for comparability.</p>
+<p>Here’s the expert sample:</p>
+<div class="row"><div class="col-md-12"><button type="button" class="btn btn-default btn-xs code-folding-btn pull-right" data-toggle="collapse" data-target="#rcode-643E0F369" aria-expanded="false" aria-controls="rcode-643E0F369"><span>Code</span></button></div></div><div class="collapse r-code-collapse" id="rcode-643E0F369"><pre class="r"><code class="r"><span class="identifier">m.expert</span> <span class="operator">&lt;-</span> <span class="identifier">lm</span><span class="paren">(</span><span class="identifier">scale</span><span class="paren">(</span><span class="identifier">outcome</span><span class="paren">)</span> <span class="operator">~</span> <span class="identifier">scale</span><span class="paren">(</span><span class="identifier">attitude</span><span class="paren">)</span> <span class="operator">+</span> <span class="identifier">scale</span><span class="paren">(</span><span class="identifier">seff</span><span class="paren">)</span>, <span class="identifier">data</span> <span class="operator">=</span> <span class="identifier">expertsample</span><span class="paren">)</span> 
+<span class="identifier">m.expert</span><span class="operator">$</span><span class="identifier">coefficients</span> <span class="operator">%&gt;%</span> <span class="identifier">round</span><span class="paren">(</span><span class="number">3</span><span class="paren">)</span></code></pre></div>
+<pre><code>##     (Intercept) scale(attitude)     scale(seff) 
+##           0.000           0.193           0.780</code></pre>
+<p>And the sample with no experts:</p>
+<div class="row"><div class="col-md-12"><button type="button" class="btn btn-default btn-xs code-folding-btn pull-right" data-toggle="collapse" data-target="#rcode-643E0F3610" aria-expanded="false" aria-controls="rcode-643E0F3610"><span>Code</span></button></div></div><div class="collapse r-code-collapse" id="rcode-643E0F3610"><pre class="r"><code class="r"><span class="identifier">m.noexpert</span> <span class="operator">&lt;-</span> <span class="identifier">lm</span><span class="paren">(</span><span class="identifier">scale</span><span class="paren">(</span><span class="identifier">outcome</span><span class="paren">)</span> <span class="operator">~</span> <span class="identifier">scale</span><span class="paren">(</span><span class="identifier">attitude</span><span class="paren">)</span> <span class="operator">+</span> <span class="identifier">scale</span><span class="paren">(</span><span class="identifier">seff</span><span class="paren">)</span>, <span class="identifier">data</span> <span class="operator">=</span> <span class="identifier">noexpertsample</span><span class="paren">)</span> 
+<span class="identifier">m.noexpert</span><span class="operator">$</span><span class="identifier">coefficients</span> <span class="operator">%&gt;%</span> <span class="identifier">round</span><span class="paren">(</span><span class="number">3</span><span class="paren">)</span></code></pre></div>
+<pre><code>##     (Intercept) scale(attitude)     scale(seff) 
+##           0.000           0.425           0.771</code></pre>
+<p>… And finally, the full sample:</p>
+<div class="row"><div class="col-md-12"><button type="button" class="btn btn-default btn-xs code-folding-btn pull-right" data-toggle="collapse" data-target="#rcode-643E0F3611" aria-expanded="false" aria-controls="rcode-643E0F3611"><span>Code</span></button></div></div><div class="collapse r-code-collapse" id="rcode-643E0F3611"><pre class="r"><code class="r"><span class="identifier">m.full</span> <span class="operator">&lt;-</span> <span class="identifier">lm</span><span class="paren">(</span><span class="identifier">scale</span><span class="paren">(</span><span class="identifier">outcome</span><span class="paren">)</span> <span class="operator">~</span> <span class="identifier">scale</span><span class="paren">(</span><span class="identifier">attitude</span><span class="paren">)</span> <span class="operator">+</span> <span class="identifier">scale</span><span class="paren">(</span><span class="identifier">seff</span><span class="paren">)</span>, <span class="identifier">data</span> <span class="operator">=</span> <span class="identifier">fullsample</span><span class="paren">)</span>
+<span class="identifier">m.full</span><span class="operator">$</span><span class="identifier">coefficients</span> <span class="operator">%&gt;%</span> <span class="identifier">round</span><span class="paren">(</span><span class="number">3</span><span class="paren">)</span></code></pre></div>
+<pre><code>##     (Intercept) scale(attitude)     scale(seff) 
+##           0.000           0.285           0.739</code></pre>
+</div>
+<div id="conclusion" class="section level2">
+<div name="conclusion" data-unique="conclusion"></div><h2>Conclusion</h2>
+<p>What have we learned? The importance of attitude you’d infer from 
+regression analysis is lower than if you had merely looked at bivariate 
+correlations. But both analyses agree you should be targeting 
+self-efficacy, if you only had to choose one.</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+
+
+</body></html>
