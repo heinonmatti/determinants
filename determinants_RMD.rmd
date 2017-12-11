@@ -34,6 +34,7 @@ Gjalt-Jorn Peters [gives us](https://sciencer.eu/2017/10/why-estimations-of-dete
 * *"Earplugs are easy to carry."*
 * *"Earplugs hinder conversation." (reverse coded)*
 
+(note: if you see weird symbols above, it means I haven't managed to fix the endless encoding problems yet)
 
 # The simulation
 

@@ -331,6 +331,7 @@ div.tocify {
 <li><em>“Earplugs are easy to carry.”</em></li>
 <li><em>“Earplugs hinder conversation.” (reverse coded)</em></li>
 </ul>
+<p>(note: if you see weird symbols above, it means I haven’t managed to fix the endless encoding problems yet)</p>
 </div>
 <div id="the-simulation" class="section level1">
 <h1>The simulation</h1>
@@ -395,27 +396,27 @@ noexpertsample &lt;- makeScales(data.frame(noexpertsample), scales) %&gt;% data.
 <p>Here’s the correlation matrix for the sample that <strong>includes experts</strong>, as well as a scatterplot of attitude on the x-axis and self-efficacy on the y-axis:</p>
 <pre class="r"><code>expertsample %&gt;% dplyr::select(attitude, seff, outcome) %&gt;% cor() %&gt;% round(3)</code></pre>
 <pre><code>##          attitude  seff outcome
-## attitude    1.000 0.668   0.713
-## seff        0.668 1.000   0.908
-## outcome     0.713 0.908   1.000</code></pre>
+## attitude    1.000 0.662   0.714
+## seff        0.662 1.000   0.909
+## outcome     0.714 0.909   1.000</code></pre>
 <pre class="r"><code>plot(expertsample$attitude, expertsample$seff, xlim = c(-3, 3))
 lines(x = c(-10, 10), y = c(-10, 10), col = &quot;red&quot;)</code></pre>
 <p><img src="determinants_RMD_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p>This is for the sample that <strong>didn’t include experts</strong>:</p>
 <pre class="r"><code>noexpertsample %&gt;% dplyr::select(attitude, seff, outcome) %&gt;% cor() %&gt;% round(3)</code></pre>
 <pre><code>##          attitude  seff outcome
-## attitude    1.000 0.341   0.693
-## seff        0.341 1.000   0.914
-## outcome     0.693 0.914   1.000</code></pre>
+## attitude    1.000 0.351   0.695
+## seff        0.351 1.000   0.917
+## outcome     0.695 0.917   1.000</code></pre>
 <pre class="r"><code>plot(noexpertsample$attitude, noexpertsample$seff, xlim = c(-3, 3))
 lines(x = c(-10, 10), y = c(-10, 10), col = &quot;red&quot;)</code></pre>
 <p><img src="determinants_RMD_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>And here’s the <strong>combined sample</strong>:</p>
 <pre class="r"><code>fullsample %&gt;% dplyr::select(attitude, seff, outcome) %&gt;% cor() %&gt;% round(3)</code></pre>
 <pre><code>##          attitude  seff outcome
-## attitude    1.000 0.541   0.687
-## seff        0.541 1.000   0.891
-## outcome     0.687 0.891   1.000</code></pre>
+## attitude    1.000 0.541   0.689
+## seff        0.541 1.000   0.894
+## outcome     0.689 0.894   1.000</code></pre>
 <pre class="r"><code>plot(fullsample$attitude, fullsample$seff, xlim = c(-3, 3))
 lines(x = c(-10, 10), y = c(-10, 10), col = &quot;red&quot;)</code></pre>
 <p><img src="determinants_RMD_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
@@ -427,17 +428,17 @@ lines(x = c(-10, 10), y = c(-10, 10), col = &quot;red&quot;)</code></pre>
 <pre class="r"><code>m.expert &lt;- lm(scale(outcome) ~ scale(attitude) + scale(seff), data = expertsample) 
 m.expert$coefficients %&gt;% round(3)</code></pre>
 <pre><code>##     (Intercept) scale(attitude)     scale(seff) 
-##           0.000           0.192           0.780</code></pre>
+##           0.000           0.200           0.776</code></pre>
 <p>And the sample with no experts:</p>
 <pre class="r"><code>m.noexpert &lt;- lm(scale(outcome) ~ scale(attitude) + scale(seff), data = noexpertsample) 
 m.noexpert$coefficients %&gt;% round(3)</code></pre>
 <pre><code>##     (Intercept) scale(attitude)     scale(seff) 
-##           0.000           0.431           0.767</code></pre>
+##           0.000           0.425           0.768</code></pre>
 <p>… And finally, the full sample:</p>
 <pre class="r"><code>m.full &lt;- lm(scale(outcome) ~ scale(attitude) + scale(seff), data = fullsample)
 m.full$coefficients %&gt;% round(3)</code></pre>
 <pre><code>##     (Intercept) scale(attitude)     scale(seff) 
-##           0.000           0.289           0.735</code></pre>
+##           0.000           0.289           0.737</code></pre>
 </div>
 <div id="conclusion" class="section level2">
 <h2>Conclusion</h2>
