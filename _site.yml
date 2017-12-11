@@ -14,7 +14,7 @@ output:
 navbar:  
   title: "Determining determinants"
   left:
-    - text: "Simulation"
-          href: determinants_RMD.html
     - text: "About"
-      href: about.html
+      href: index.html
+    - text: "Simulation"
+      href: determinants_RMD.html

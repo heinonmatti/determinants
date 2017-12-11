@@ -6,11 +6,13 @@ date: ""
 
 
 ```{r setup, include=FALSE}
-.libPaths("C:/R/R-3.4.2/library")
+.libPaths("C:/rlibs/3.4.2")
 
 knitr::opts_chunk$set(echo = TRUE)
 
 if(!require(pacman)) install.packages(pacman)
+
+library(pacman)
 
 p_load(userfriendlyscience, tidyverse, MASS, lme4)
 
