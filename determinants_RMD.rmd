@@ -26,13 +26,13 @@ Gjalt-Jorn Peters [gives us](https://sciencer.eu/2017/10/why-estimations-of-dete
  
 *An intervention developer does a determinant study and in the questionnaire measures the following two attitudinal beliefs:*
 
-* *“When I use earplugs, I experience an uncomfortable feeling in my ears.”*
-* *“When I use earplugs, my experience of the music is diminished.”*
+* *"When I use earplugs, I experience an uncomfortable feeling in my ears."*
+* *"When I use earplugs, my experience of the music is diminished."*
 
 *And the following two self-efficacy beliefs:*
 
-* *“Earplugs are easy to carry.”*
-* *“Earplugs hinder conversation.” (reverse coded)*
+* *"Earplugs are easy to carry."*
+* *"Earplugs hinder conversation." (reverse coded)*
 
 
 # The simulation
